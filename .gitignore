@@ -161,6 +161,7 @@ cython_debug/
 
 # Local data
 /local
+*-local.*
 
 # Cookie
 /cookie.txt
