@@ -3,6 +3,7 @@ import shapely.ops
 import math
 import pyproj
 
+
 def _split_bounds(minx, miny, maxx, maxy, maxstep):
     height = maxy - miny
     width = maxx - minx
@@ -41,21 +42,18 @@ def _split_bounds(minx, miny, maxx, maxy, maxstep):
     return bboxes
 
 
-def _convert_bounds_to_cian_bbox(minx, miny, maxx, maxy):
-    return {
-        "topLeft": {"lat": maxy, "lng": minx},
-        "bottomRight": {"lat": miny, "lng": maxx},
-    }
-
-
-def get_cian_bboxes_for_geojson(geojson, maxstep):
+def get_boxes_by_geojson(geojson: str, maxstep: float) -> list[str]:
     geometry4326 = shapely.from_geojson(geojson)
 
-    epsg4326 = pyproj.CRS('EPSG:4326')
-    epsg3857 = pyproj.CRS('EPSG:3857')
+    epsg4326 = pyproj.CRS("EPSG:4326")
+    epsg3857 = pyproj.CRS("EPSG:3857")
 
-    transform4326to3857 = pyproj.Transformer.from_crs(epsg4326, epsg3857, always_xy=True).transform
-    transform3857to4326 = pyproj.Transformer.from_crs(epsg3857, epsg4326, always_xy=True).transform
+    transform4326to3857 = pyproj.Transformer.from_crs(
+        epsg4326, epsg3857, always_xy=True
+    ).transform
+    transform3857to4326 = pyproj.Transformer.from_crs(
+        epsg3857, epsg4326, always_xy=True
+    ).transform
 
     geometry3857 = shapely.ops.transform(transform4326to3857, geometry4326)
 
@@ -63,6 +61,6 @@ def get_cian_bboxes_for_geojson(geojson, maxstep):
     for bounds in _split_bounds(*geometry3857.bounds, maxstep):
         box3857 = shapely.box(*bounds)
         if shapely.intersects(box3857, geometry3857):
-            bboxes.append(_convert_bounds_to_cian_bbox(*shapely.ops.transform(transform3857to4326, box3857).bounds))
+            bboxes.append(shapely.to_geojson(shapely.ops.transform(transform3857to4326, box3857)))
 
     return bboxes

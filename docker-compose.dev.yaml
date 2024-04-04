@@ -1,0 +1,44 @@
+services:
+  db:
+    extends:
+      file: docker-compose.yaml
+      service: db
+    env_file:
+      - .env
+
+  redis:
+    extends:
+      file: docker-compose.yaml
+      service: redis
+
+  web:
+    extends:
+      file: docker-compose.yaml
+      service: web
+    env_file:
+      - .env.dev
+    volumes:
+      - ./:/app:cached
+    command: sleep infinity
+
+  celery:
+    extends:
+      file: docker-compose.yaml
+      service: celery
+    env_file:
+      - .env.dev
+    volumes:
+      - ./:/app:cached
+
+  celery-beat:
+    extends:
+      file: docker-compose.yaml
+      service: celery-beat
+    env_file:
+      - .env.dev
+    volumes:
+      - ./:/app:cached
+
+volumes:
+  db-data:
+    driver: local
