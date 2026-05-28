@@ -7,7 +7,6 @@
 [![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python\&logoColor=white)](#)
 [![GeoJSON](https://img.shields.io/badge/GeoJSON-EPSG%3A4326-brightgreen)](#geospatial-search)
 [![Shapely](https://img.shields.io/badge/Geometry-Shapely-orange)](#architecture)
-[![Status](https://img.shields.io/badge/Status-Portfolio%20project-purple)](#why-this-project)
 
 Collect real-estate offers from CIAN by combining frontend-compatible search filters with GeoJSON-based spatial filtering. Built for one-off analytical datasets, market research, and geospatial experiments.
 
